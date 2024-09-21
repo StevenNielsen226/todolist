@@ -1,26 +1,16 @@
-import React from "react";
+import ChecklistItem from "./ChecklistItem";
 
 const MainContent = () => {
-  return (
-    <div>
-      <div>
-        <label for="getUp">Get up</label>
-        <input type="checkbox" name="getUp" />
-      </div>
-      <div>
-        <label for="work">Work</label>
-        <input type="checkbox" name="work" />
-      </div>
-      <div>
-        <label for="home">Home</label>
-        <input type="checkbox" name="home" />
-      </div>
-      <div>
-        <label for="homework">Homework</label>
-        <input type="checkbox" name="homework" />
-      </div>
-    </div>
-  );
+  let toDoList = [
+    { label: "Work", text: "Work" },
+    { label: "Home", text: "Home" },
+    { label: "Homework", text: "Homework" },
+  ];
+  let mappingToDoList = toDoList.map(({ label, text }) => (
+    // eslint-disable-next-line react/jsx-key
+    <ChecklistItem label={label} text={text} />
+  ));
+  return <>{mappingToDoList}</>;
 };
 
 export default MainContent;
