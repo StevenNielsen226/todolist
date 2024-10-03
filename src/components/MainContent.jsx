@@ -53,10 +53,11 @@ const MainContent = () => {
       body: JSON.stringify(newItem),
     });
     const createdItem = await response.json();
+    console.log(createdItem);
     if (!response.ok) {
       console.error("error adding item");
     }
-    console.log(createdItem);
+
     setChecked([...checked, createdItem]);
     setInputValue("");
   };
