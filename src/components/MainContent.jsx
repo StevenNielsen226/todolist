@@ -46,6 +46,7 @@ const MainContent = () => {
     const newItem = {
       text: inputValue,
     };
+    console.log(newItem);
     const response = await fetch(`${apiUrl}/add-item`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -55,6 +56,7 @@ const MainContent = () => {
     if (!response.ok) {
       console.error("error adding item");
     }
+    console.log(createdItem);
     setChecked([...checked, createdItem]);
     setInputValue("");
   };
