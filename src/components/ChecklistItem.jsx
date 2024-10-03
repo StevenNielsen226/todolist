@@ -8,10 +8,7 @@ const ChecklistItem = ({
   editInputValue,
   handleDelete,
   handleEdit,
-  htmlFor,
-  type,
-  id,
-  name,
+  _id,
   text,
   completed,
   handleUserClick,
@@ -28,21 +25,21 @@ const ChecklistItem = ({
           <FormControlLabel
             control={
               <Checkbox
-                onChange={(e) => handleUserClick(e)}
+                onChange={() => handleUserClick(_id)}
                 checked={completed}
-                type={type}
-                id={`${id}`}
+                type="checked"
+                id={`${_id}`}
                 name={name}
               />
             }
             label={text}
-            htmlFor={htmlFor}
+            htmlFor={_id}
           />
 
           <Button
             variant="outlined"
-            onClick={() => handleDelete(id)}
-            id={`${id}`}
+            onClick={() => handleDelete(_id)}
+            id={`${_id}`}
           >
             Delete
           </Button>
@@ -52,15 +49,15 @@ const ChecklistItem = ({
             onClick={() => {
               setIsEditClicked(!isEditClicked);
               setEditInputValue(text);
-              setEditItemId(id);
+              setEditItemId(_id);
             }}
-            id={`${id}`}
+            id={`${_id}`}
           >
             Edit
           </Button>
         </>
       )}
-      {isEditClicked && editItemId === id && (
+      {isEditClicked && editItemId === _id && (
         <>
           {" "}
           <TextField
@@ -73,10 +70,10 @@ const ChecklistItem = ({
           <Button
             variant="outlined"
             onClick={() => {
-              handleEdit(id);
+              handleEdit(_id);
               setIsEditClicked(!isEditClicked);
             }}
-            id={`${id}`}
+            id={`${_id}`}
           >
             Update
           </Button>

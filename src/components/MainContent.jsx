@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChecklistItem from "./ChecklistItem";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -13,64 +13,99 @@ const MainContent = () => {
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [editInputValue, setEditInputValue] = useState("");
   const [editItemId, setEditItemId] = useState(null);
-  const handleUserClick = (e) => {
-    const tempArray = [...checked].map((item) =>
-      item.id === e.target.id ? { ...item, completed: !item.completed } : item
+  const apiUrl =
+    import.meta.env.VITE_API_URL || "https://todolistback-cbxs.onrender.com";
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`${apiUrl}/todos`);
+      const data = await response.json();
+      setChecked(data.todos);
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const handleUserClick = async (id) => {
+    const clickedItem = checked.find((item) => item._id === id);
+    const updatedTodo = { ...clickedItem, completed: !clickedItem.completed };
+    const res = await fetch(`${apiUrl}/edit-item/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: updatedTodo.text,
+        completed: updatedTodo.completed,
+      }),
+    });
+    const updatedData = await res.json();
+
+    setChecked((prev) =>
+      prev.map((item) => (item._id === id ? updatedData : item))
     );
-    setChecked(tempArray);
     console.log(checked);
   };
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     const newItem = {
-      id: checked.length + 1,
       text: inputValue,
-      htmlFor: inputValue,
-      type: "checkbox",
-      name: inputValue,
     };
-    setChecked([...checked, newItem]);
+    const response = await fetch(`${apiUrl}/add-item`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newItem),
+    });
+    const createdItem = await response.json();
+    if (!response.ok) {
+      console.error("error adding item");
+    }
+    setChecked([...checked, createdItem]);
     setInputValue("");
   };
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-  const handleEdit = (id) => {
+  const handleEdit = async (id) => {
     const editItem = checked.find((item) => item.id === id);
     editItem.text = editInputValue;
+    const res = await fetch(`${apiUrl}/edit-item/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: editItem.text,
+        completed: editItem.completed,
+      }),
+    });
+    const updatedEditItem = await res.json();
     const tempArray = [...checked].map((item) =>
-      item.id == id ? editItem : item
+      item.id == id ? updatedEditItem : item
     );
     setChecked(tempArray);
   };
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const updatedItems = checked.filter((item) => {
       if (item.id !== id) return item;
+    });
+    await fetch(`${apiUrl}/delete/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
     });
     console.log(updatedItems);
     setChecked(updatedItems);
   };
-  const mappingToDoList = checked.map(
-    ({ text, completed, htmlFor, type, id, name }) => (
-      <ChecklistItem
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-        text={text}
-        htmlFor={htmlFor}
-        type={type}
-        key={id}
-        completed={completed}
-        id={id}
-        name={name}
-        handleUserClick={handleUserClick}
-        isEditClicked={isEditClicked}
-        setIsEditClicked={setIsEditClicked}
-        editInputValue={editInputValue}
-        setEditInputValue={setEditInputValue}
-        editItemId={editItemId}
-        setEditItemId={setEditItemId}
-      />
-    )
-  );
+  const mappingToDoList = checked.map(({ text, completed, _id }) => (
+    <ChecklistItem
+      handleEdit={handleEdit}
+      handleDelete={handleDelete}
+      text={text}
+      completed={completed}
+      id={_id}
+      key={_id}
+      handleUserClick={handleUserClick}
+      isEditClicked={isEditClicked}
+      setIsEditClicked={setIsEditClicked}
+      editInputValue={editInputValue}
+      setEditInputValue={setEditInputValue}
+      editItemId={editItemId}
+      setEditItemId={setEditItemId}
+    />
+  ));
   return (
     <>
       <TextField
