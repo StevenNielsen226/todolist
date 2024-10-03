@@ -22,8 +22,8 @@ const MainContent = () => {
         const data = await response.json();
         console.log(data, "useEffect");
         setChecked(data.todos);
-      } catch (err) {
-        console.err(err);
+      } catch (error) {
+        console.error(error);
       }
     };
     fetchData();
@@ -65,8 +65,8 @@ const MainContent = () => {
       }
 
       setChecked([...checked, createdItem]);
-    } catch (err) {
-      console.err("failed to fetch Todos", err);
+    } catch (error) {
+      console.error("failed to fetch Todos", error);
     }
     setInputValue("");
   };
