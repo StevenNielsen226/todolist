@@ -32,6 +32,7 @@ const MainContent = () => {
   const handleUserClick = async (id) => {
     const clickedItem = checked.find((item) => item._id === id);
     const updatedTodo = { ...clickedItem, completed: !clickedItem.completed };
+    console.log(updatedTodo, "updated Todo");
     const res = await fetch(`${apiUrl}/edit-item/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -41,7 +42,7 @@ const MainContent = () => {
       }),
     });
     const updatedData = await res.json();
-
+    console.log(updatedData, "updated Data");
     setChecked((prev) =>
       prev.map((item) => (item._id === id ? updatedData : item))
     );
@@ -80,7 +81,7 @@ const MainContent = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        text: editItem.text,
+        text: editInputValue,
         completed: editItem.completed,
       }),
     });
@@ -94,7 +95,7 @@ const MainContent = () => {
     const updatedItems = checked.filter((item) => {
       if (item._id !== id) return item;
     });
-    await fetch(`${apiUrl}/delete/${id}`, {
+    await fetch(`${apiUrl}/delete-item/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
