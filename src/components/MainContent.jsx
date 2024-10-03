@@ -74,7 +74,7 @@ const MainContent = () => {
     setInputValue(e.target.value);
   };
   const handleEdit = async (id) => {
-    const editItem = checked.find((item) => item.id === id);
+    const editItem = checked.find((item) => item._id === id);
     editItem.text = editInputValue;
     const res = await fetch(`${apiUrl}/edit-item/${id}`, {
       method: "POST",
@@ -86,13 +86,13 @@ const MainContent = () => {
     });
     const updatedEditItem = await res.json();
     const tempArray = [...checked].map((item) =>
-      item.id == id ? updatedEditItem : item
+      item._id == id ? updatedEditItem : item
     );
     setChecked(tempArray);
   };
   const handleDelete = async (id) => {
     const updatedItems = checked.filter((item) => {
-      if (item.id !== id) return item;
+      if (item._id !== id) return item;
     });
     await fetch(`${apiUrl}/delete/${id}`, {
       method: "DELETE",
