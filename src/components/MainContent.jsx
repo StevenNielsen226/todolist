@@ -17,9 +17,14 @@ const MainContent = () => {
     import.meta.env.VITE_API_URL || "https://todolistback-cbxs.onrender.com";
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${apiUrl}/todos`);
-      const data = await response.json();
-      setChecked(data.todos);
+      try {
+        const response = await fetch(`${apiUrl}/todos`);
+        const data = await response.json();
+        console.log(data, "useEffect");
+        setChecked(data.todos);
+      } catch (err) {
+        console.err(err);
+      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,19 +51,23 @@ const MainContent = () => {
     const newItem = {
       text: inputValue,
     };
-    console.log(newItem);
-    const response = await fetch(`${apiUrl}/add-item`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newItem),
-    });
-    const createdItem = await response.json();
-    console.log(createdItem);
-    if (!response.ok) {
-      console.error("error adding item");
-    }
+    console.log(newItem, "newItem");
+    try {
+      const response = await fetch(`${apiUrl}/add-item`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newItem),
+      });
+      const createdItem = await response.json();
+      console.log(createdItem, "createdItem");
+      if (!response.ok) {
+        console.error("error adding item");
+      }
 
-    setChecked([...checked, createdItem]);
+      setChecked([...checked, createdItem]);
+    } catch (err) {
+      console.err("failed to fetch Todos", err);
+    }
     setInputValue("");
   };
   const handleInputChange = (e) => {
