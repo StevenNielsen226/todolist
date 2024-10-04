@@ -74,9 +74,35 @@ const MainContent = () => {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
+  // const handleEdit = async (id) => {
+  //   const editItem = [...checked].find((item) => item._id === id);
+  //   editItem.text = editInputValue;
+  //   const res = await fetch(`${apiUrl}/edit-item/${id}`, {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       text: editInputValue,
+  //       completed: editItem.completed,
+  //     }),
+  //   });
+  //   const updatedEditItem = await res.json();
+  //   const tempArray = [...checked].map((item) =>
+  //     item._id == id ? updatedEditItem : item
+  //   );
+  //   setChecked(tempArray);
+  // };
+
   const handleEdit = async (id) => {
     const editItem = [...checked].find((item) => item._id === id);
+
+    // Check if editItem exists
+    if (!editItem) {
+      console.error(`Item with id ${id} not found.`);
+      return; // Exit the function if item is not found
+    }
+
     editItem.text = editInputValue;
+
     const res = await fetch(`${apiUrl}/edit-item/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,12 +111,14 @@ const MainContent = () => {
         completed: editItem.completed,
       }),
     });
+
     const updatedEditItem = await res.json();
     const tempArray = [...checked].map((item) =>
       item._id == id ? updatedEditItem : item
     );
     setChecked(tempArray);
   };
+
   const handleDelete = async (id) => {
     const updatedItems = checked.filter((item) => {
       if (item._id !== id) return item;
