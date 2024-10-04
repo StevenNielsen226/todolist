@@ -29,7 +29,7 @@ const MainContent = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleUserClick = async (id) => {
+  let handleUserClick = async (id) => {
     const clickedItem = [...checked].find((item) => item._id === id);
     const updatedTodo = { ...clickedItem, completed: !clickedItem.completed };
     console.log(updatedTodo, "updated Todo");
