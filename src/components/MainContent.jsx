@@ -75,7 +75,7 @@ const MainContent = () => {
     setInputValue(e.target.value);
   };
   const handleEdit = async (id) => {
-    const editItem = { ...checked.find((item) => item._id === id) };
+    const editItem = [...checked].find((item) => item._id === id);
     editItem.text = editInputValue;
     const res = await fetch(`${apiUrl}/edit-item/${id}`, {
       method: "POST",
