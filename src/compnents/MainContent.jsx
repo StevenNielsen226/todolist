@@ -75,14 +75,14 @@ const MainContent = () => {
     setInputValue(e.target.value);
   };
   const handleEdit = async (id) => {
-    const editItem = [...checked].find((item) => item._id === id);
-    editItem.text = editInputValue;
+    let editItem = [...checked].find((item) => item._id === id);
+    const itemToEdit = { ...editItem, text: editInputValue };
     const res = await fetch(`${apiUrl}/edit-item/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         text: editInputValue,
-        completed: editItem.completed,
+        completed: itemToEdit.completed,
       }),
     });
     const updatedEditItem = await res.json();
