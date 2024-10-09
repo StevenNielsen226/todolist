@@ -108,7 +108,7 @@ const MainContent = () => {
       handleDelete={handleDelete}
       text={text}
       completed={completed}
-      id={_id}
+      _id={_id}
       key={_id}
       handleUserClick={handleUserClick}
       isEditClicked={isEditClicked}
